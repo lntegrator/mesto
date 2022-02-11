@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesto Russia</title>
+    <link rel="stylesheet" href="./pages/index.css">
+</head>
+<body class="page">
+
+    <header class="header">
+        <img src="./images/logo.svg" alt="Логотип сервиса Место Россия" class="header__logo">
+    </header>
+
+    <main class="content">
+        
+        <section class="profile">
+            <div class="profile__person">
+                <img src="./images/avatar.jpg" alt="Фотография автора" class="profile__avatar">
+                <div class="profile__info">
+                    <div class="profile__name">
+                        <h1 class="profile__title">Жак-Ив Кусто</h1>
+                        <img src="./images/edit.svg" alt="" class="profile__edit-button">
+                    </div>
+                    <p class="profile__subtitle">Исследователь океана</p>
+                </div>
+            </div>
+            <button class="profile__add-button">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 9.77778H12.2222V0H9.77778V9.77778H0V12.2222H9.77778V22H12.2222V12.2222H22V9.77778Z" fill="white"/>
+                </svg>
+            </button>
+        </section>
+
+        <section class="elements">
+            <div class="element">
+                <img src="./images/moscow.jpg" alt="Москва" class="element__image">
+                <div class="element__place">
+                    <h3 class="element__name">Москва</h3>
+                    <img src="./images/heart.svg" class="element__icon" alt="">
+                </div>
+            </div>
+
+            <div class="element">
+                <img src="./images/petersburg.jpg" alt="Санкт-Петербург" class="element__image">
+                <div class="element__place">
+                    <h3 class="element__name">Санкт-Петербург</h3>
+                    <img src="./images/heart.svg" class="element__icon" alt="">
+                </div>
+            </div>
+
+            <div class="element">
+                <img src="./images/taiga.jpg" alt="Река Кама" class="element__image">
+                <div class="element__place">
+                    <h3 class="element__name">Река Кама</h3>
+                    <img src="./images/heart.svg" class="element__icon" alt="">
+                </div>
+            </div>
+
+            <div class="element">
+                <img src="./images/derevnya.jpg" alt="Деревня Люзень" class="element__image">
+                <div class="element__place">
+                    <h3 class="element__name">Люзень</h3>
+                    <img src="./images/heart.svg" class="element__icon" alt="">
+                </div>
+            </div>
+
+            <div class="element">
+                <img src="./images/river.jpg" alt="Река Вычегда (Эжва)" class="element__image">
+                <div class="element__place">
+                    <h3 class="element__name">Река Вычегда</h3>
+                    <img src="./images/heart.svg" class="element__icon" alt="">
+                </div>
+            </div>
+
+            <div class="element">
+                <img src="./images/lysva.jpg" alt="Лысьва" class="element__image">
+                <div class="element__place">
+                    <h3 class="element__name">Лысьва</h3>
+                    <img src="./images/heart.svg" class="element__icon" alt="">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p class="footer__copyright">© 2020 Mesto Russia</p>
+    </footer>
+
+    <div class="popup">
+        <div class="popup__container">
+            <img src="./images/close.svg" class="popup__icon-close" alt="">
+            <form class="form">
+                <h3 class="form__title">Редактировать профиль</h3>
+                <fieldset class="form__fieldset">
+                    <input type="text" class="form__field form__name" value="Жак-Ив Кусто">
+                    <input type="text" class="form__field form__job" value="Исследователь океана">
+                </fieldset>
+                <button class="form__submit-button" type="submit">Сохранить</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="./script.js"></script>
+</body>
+</html>
