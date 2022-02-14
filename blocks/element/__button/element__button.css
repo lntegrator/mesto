@@ -1,11 +1,13 @@
-.element__icon{
+.element__button{
     width: 22px;
     height: 19px;
     transition: ease-in-out .3s;
     margin-left: 10px;
+    background: url('../../../images/heart.svg');
+    border: none;
 }
 
-.element__icon:hover{
+.element__button:hover{
     opacity: 0.8;
     cursor: url('../../../images/cursor.svg'), pointer;
 }

@@ -21,64 +21,62 @@
                 <div class="profile__info">
                     <div class="profile__name">
                         <h1 class="profile__title">Жак-Ив Кусто</h1>
-                        <img src="./images/edit.svg" alt="" class="profile__edit-button">
+                        <button class="profile__edit-button"></button>
                     </div>
                     <p class="profile__subtitle">Исследователь океана</p>
                 </div>
             </div>
-            <button class="profile__add-button">
-                <img src="./images/plus.svg" alt="">
-            </button>
+            <button class="profile__add-button"></button>
         </section>
 
         <section class="elements">
-            <div class="element">
+            <article class="element">
                 <img src="./images/moscow.jpg" alt="Москва" class="element__image">
                 <div class="element__place">
                     <h3 class="element__name">Москва</h3>
-                    <img src="./images/heart.svg" class="element__icon" alt="">
+                    <button class="element__button"></button>
                 </div>
-            </div>
+            </article>
 
-            <div class="element">
+            <article class="element">
                 <img src="./images/petersburg.jpg" alt="Санкт-Петербург" class="element__image">
                 <div class="element__place">
                     <h3 class="element__name">Санкт-Петербург</h3>
-                    <img src="./images/heart.svg" class="element__icon" alt="">
+                    <button class="element__button"></button>
                 </div>
-            </div>
+            </article>
 
-            <div class="element">
+            <article class="element">
                 <img src="./images/taiga.jpg" alt="Река Кама" class="element__image">
                 <div class="element__place">
                     <h3 class="element__name">Река Кама</h3>
-                    <img src="./images/heart.svg" class="element__icon" alt="">
+                    <button class="element__button"></button>
                 </div>
-            </div>
+            </article>
 
-            <div class="element">
+            <article class="element">
                 <img src="./images/derevnya.jpg" alt="Деревня Люзень" class="element__image">
                 <div class="element__place">
                     <h3 class="element__name">Люзень</h3>
-                    <img src="./images/heart.svg" class="element__icon" alt="">
+                    <button class="element__button"></button>
                 </div>
-            </div>
+            </article>
 
-            <div class="element">
+            <article class="element">
                 <img src="./images/river.jpg" alt="Река Вычегда (Эжва)" class="element__image">
                 <div class="element__place">
                     <h3 class="element__name">Река Вычегда</h3>
-                    <img src="./images/heart.svg" class="element__icon" alt="">
+                    <button class="element__button"></button>
                 </div>
-            </div>
+            </article>
 
-            <div class="element">
+            <article class="element">
                 <img src="./images/lysva.jpg" alt="Лысьва" class="element__image">
                 <div class="element__place">
                     <h3 class="element__name">Лысьва</h3>
-                    <img src="./images/heart.svg" class="element__icon" alt="">
+                    <button class="element__button"></button>
                 </div>
-            </div>
+            </article>
         </section>
     </main>
 
@@ -88,18 +86,18 @@
 
     <div class="popup">
         <div class="popup__container">
-            <img src="./images/close.svg" class="popup__icon-close" alt="">
-            <form class="form">
-                <h3 class="form__title">Редактировать профиль</h3>
+            <button class="popup__button-close"></button>
+            <form class="popup__form form" name="profile_form">
+                <h2 class="form__title">Редактировать профиль</h2>
                 <fieldset class="form__fieldset">
-                    <input type="text" class="form__field form__name" value="Жак-Ив Кусто">
-                    <input type="text" class="form__field form__job" value="Исследователь океана">
+                    <input type="text" class="form__field form__field_type_name" placeholder="Введите имя" value="">
+                    <input type="text" class="form__field form__field_type_job" placeholder="Введите специальность" value="">
                 </fieldset>
                 <button class="form__submit-button" type="submit">Сохранить</button>
             </form>
         </div>
     </div>
     
-    <script src="./script.js"></script>
+    <script src="./scripts/script.js"></script>
 </body>
 </html>

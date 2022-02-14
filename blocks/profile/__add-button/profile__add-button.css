@@ -7,6 +7,7 @@
     border-radius: 2px;
     color: #fff;
     transition: ease-in-out .3s;
+    background: url('../../../images/plus.svg') no-repeat center;
 }
 
 .profile__add-button:hover{

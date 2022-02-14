@@ -23,5 +23,7 @@
     .form__submit-button{
         margin-top: 45px;
         width: 100%;
+        font-size: 14px;
+        line-height: 17px;
     }
 }
