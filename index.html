@@ -29,62 +29,15 @@
             <button class="profile__add-button"></button>
         </section>
 
-        <section class="elements">
-            <article class="element">
-                <img src="./images/moscow.jpg" alt="Москва" class="element__image">
-                <div class="element__place">
-                    <h3 class="element__name">Москва</h3>
-                    <button class="element__button"></button>
-                </div>
-            </article>
-
-            <article class="element">
-                <img src="./images/petersburg.jpg" alt="Санкт-Петербург" class="element__image">
-                <div class="element__place">
-                    <h3 class="element__name">Санкт-Петербург</h3>
-                    <button class="element__button"></button>
-                </div>
-            </article>
-
-            <article class="element">
-                <img src="./images/taiga.jpg" alt="Река Кама" class="element__image">
-                <div class="element__place">
-                    <h3 class="element__name">Река Кама</h3>
-                    <button class="element__button"></button>
-                </div>
-            </article>
-
-            <article class="element">
-                <img src="./images/derevnya.jpg" alt="Деревня Люзень" class="element__image">
-                <div class="element__place">
-                    <h3 class="element__name">Люзень</h3>
-                    <button class="element__button"></button>
-                </div>
-            </article>
-
-            <article class="element">
-                <img src="./images/river.jpg" alt="Река Вычегда (Эжва)" class="element__image">
-                <div class="element__place">
-                    <h3 class="element__name">Река Вычегда</h3>
-                    <button class="element__button"></button>
-                </div>
-            </article>
-
-            <article class="element">
-                <img src="./images/lysva.jpg" alt="Лысьва" class="element__image">
-                <div class="element__place">
-                    <h3 class="element__name">Лысьва</h3>
-                    <button class="element__button"></button>
-                </div>
-            </article>
+        <section class="elements" aria-label="Места">
         </section>
     </main>
 
     <footer class="footer">
-        <p class="footer__copyright">© 2020 Mesto Russia</p>
+        <p class="footer__copyright">© 2022 Support Ukraine</p>
     </footer>
 
-    <div class="popup">
+    <div class="popup popup_type_profile">
         <div class="popup__container">
             <button class="popup__button-close"></button>
             <form class="popup__form form" name="profile_form">
@@ -97,7 +50,40 @@
             </form>
         </div>
     </div>
+
+    <div class="popup popup_type_mesto">
+        <div class="popup__container">
+            <button class="popup__button-close"></button>
+            <form class="popup__form form" name="profile_form">
+                <h2 class="form__title">Новое место</h2>
+                <fieldset class="form__fieldset">
+                    <input type="text" class="form__field form__field_type_mesto" placeholder="Название" value="">
+                    <input type="text" class="form__field form__field_type_link" placeholder="Ссылка на картинку" value="">
+                </fieldset>
+                <button class="form__submit-button" type="submit">Создать</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="popup popup_type_photo">
+        <div class="popup__photo-container">
+            <button class="popup__button-close"></button>
+            <img class="popup__photo" src="#" alt="">
+            <p class="popup__caption"></p>
+        </div>
+    </div>
     
+    <template class="card-template">
+        <article class="element">
+            <img src="" alt="" class="element__image">
+            <button class="element__delete"></button>
+            <div class="element__place">
+                <h3 class="element__name"></h3>
+                <button class="element__button"></button>
+            </div>
+        </article>
+    </template>
+
     <script src="./scripts/script.js"></script>
 </body>
 </html>
