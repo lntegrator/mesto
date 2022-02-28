@@ -3,3 +3,9 @@
     flex-direction: row;
     align-items: baseline;
 }
+
+@media screen and (max-width: 900px) {
+    .profile__name{
+        justify-content: center;
+    }
+}
