@@ -7,7 +7,10 @@
     line-height: 1.14;
     margin: 0;
     padding: 0;
-}
+    max-width: 500px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;}
 
 @media screen and (max-width: 900px) {
     .profile__title{

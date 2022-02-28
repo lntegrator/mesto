@@ -74,7 +74,11 @@ closeButtonPhoto.addEventListener('click', () => closePopUp(popupPhoto));
 
 //Функция открытия попапов
 function openPopup(popupType){
-    popupType.classList.add('popup_opened')
+    popupType.classList.add('popup_opened');
+    if (popupType == popupProfile){
+      nameInput.value = personName.textContent;
+      jobInput.value = description.textContent;
+    }
 };
 
 //Функция закрытия попапов
@@ -95,8 +99,8 @@ function formMestoSubmit (evt) {
     evt.preventDefault();
     const newCard = createCard(inputMesto.value, inputLink.value);
     sectionCards.prepend(newCard);
-    formMesto.reset();
     closePopUp(popupMesto);
+    formMesto.reset();
 };
 
 //Функция создания карточки
@@ -111,9 +115,7 @@ function createCard (mestoName, mestoLink){
 
     //Лайк карточки
     const likeButton = cardElement.querySelector('.element__button');
-    likeButton.addEventListener('click', function(evt){
-        evt.target.classList.toggle('element__button_active')
-    });
+    likeButton.addEventListener('click', likeCard);
 
     //Удаление карточки
     const deleteCard = cardElement.querySelector('.element__delete');
@@ -124,13 +126,18 @@ function createCard (mestoName, mestoLink){
 
     //Открытие фото в попапе
     cardPhoto.addEventListener('click', function(evt){
-        openPopup(popupPhoto);
         const mesto = evt.target;
         imagePopupPhoto.src = mesto.src;
         captionPopupPhoto.textContent = mesto.alt;
+        openPopup(popupPhoto);
     });
     
     return cardElement;
+}
+
+//Функция лайка карточки
+function likeCard(evt) {
+  evt.target.classList.toggle('element__button_active');
 }
 
   //Генерация карточек из массива
