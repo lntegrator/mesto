@@ -79,23 +79,17 @@ function openPopup(popupType){
       nameInput.value = personName.textContent;
       jobInput.value = description.textContent;
     }
+    document.addEventListener('keydown', closeEsc)
 };
 
 //Функция закрытия попапов
 function closePopUp(popupType){
-    popupType.classList.remove('popup_opened')
+    popupType.classList.remove('popup_opened');
+    document.removeEventListener('keydown', closeEsc);
 };
 
-//Функция сохранения изменения профиля
-function formSubmitHandler (evt) {
-    evt.preventDefault();
-    personName.textContent = nameInput.value;
-    description.textContent = jobInput.value;
-    closePopUp(popupProfile);
-}
-
 //Функция сохранения карточки
-function formMestoSubmit (evt) {
+function formMestoSubmit (evt){
     evt.preventDefault();
     const newCard = createCard(inputMesto.value, inputLink.value);
     sectionCards.prepend(newCard);
@@ -140,7 +134,33 @@ function likeCard(evt) {
   evt.target.classList.toggle('element__button_active');
 }
 
-  //Генерация карточек из массива
-  initialCards.forEach(function(item){
-      sectionCards.append(createCard(item.name, item.link));
-  });
+//Генерация карточек из массива
+initialCards.forEach(function(item){
+  sectionCards.append(createCard(item.name, item.link));
+});
+
+//Функция сохранения изменения профиля
+function formSubmitHandler (evt) {
+  evt.preventDefault();
+  personName.textContent = nameInput.value;
+  description.textContent = jobInput.value;
+  closePopUp(popupProfile);
+}
+
+//Функция закрытия попапа при нажатии Esc
+function closeEsc(evt) {
+  if (evt.key === 'Escape') {
+    const openedPopup = document.querySelector('.popup_opened');
+    closePopUp(openedPopup);
+  }
+};
+
+//Находим все оверлеи для отслеживания кликов по ним
+const overlayProfile = document.querySelector('.popup__overlay_profile');
+const overlayMesto = document.querySelector('.popup__overlay_mesto');
+const overlayPhoto = document.querySelector('.popup__overlay_photo');
+
+//Слушаем клики на оверлеи для закрытия
+overlayProfile.addEventListener('click', () => closePopUp(popupProfile));
+overlayMesto.addEventListener('click', () => closePopUp(popupMesto));
+overlayPhoto.addEventListener('click', () => closePopUp(popupPhoto));

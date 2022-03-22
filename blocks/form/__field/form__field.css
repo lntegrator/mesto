@@ -12,6 +12,10 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-.form__field:last-child{
+.form__field:last-of-type{
     margin-top: 30px;
+}
+
+.form__field:invalid{
+    border-bottom: 1px solid #FF0000;
 }
