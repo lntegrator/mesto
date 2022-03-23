@@ -66,7 +66,7 @@ const initialCards = [
   ];
 
 //Слушатели событий
-buttonEdit.addEventListener('click', () => openPopup(popupProfile));
+buttonEdit.addEventListener('click', () => fillProfilePopup(popupProfile));
 buttonAdd.addEventListener('click', () => openPopup(popupMesto));
 buttonProfileClose.addEventListener('click', () => {closePopUp(popupProfile)});
 buttonMestoClose.addEventListener('click', () => {closePopUp(popupMesto)});
@@ -74,19 +74,17 @@ formProfile.addEventListener('submit', formSubmitHandler);
 formMesto.addEventListener('submit', formMestoSubmit);
 buttonPhotoClose.addEventListener('click', () => closePopUp(popupPhoto));
 
+//Функция подставления значения в попап профиля со страницы
+function fillProfilePopup(popupType){
+  nameInput.value = personName.textContent;
+  jobInput.value = description.textContent;
+  openPopup(popupType);
+};
+
 //Функция открытия попапов
 function openPopup(popupType){
     popupType.classList.add('popup_opened');
-    if (popupType == popupProfile){
-      fillProfilePopup();
-    }
     document.addEventListener('keydown', closeEsc)
-};
-
-//Функция подставления значения в попап профиля со страницы
-function fillProfilePopup(){
-  nameInput.value = personName.textContent;
-  jobInput.value = description.textContent;
 };
 
 //Функция закрытия попапов
@@ -174,4 +172,4 @@ const overlayPhoto = document.querySelector('.popup__overlay_photo');
 //Слушаем клики на оверлеи для закрытия
 overlayProfile.addEventListener('click', () => closePopUp(popupProfile));
 overlayMesto.addEventListener('click', () => closePopUp(popupMesto));
-overlayPhoto.addEventListener('click', () => closePopUp(popupProfile));
+overlayPhoto.addEventListener('click', () => closePopUp(popupPhoto));
