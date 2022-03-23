@@ -1,7 +1,3 @@
-//Валидация форм
-const formElement = document.querySelector('.form'); //Берем форму
-const formInput = formElement.querySelector('.form__field'); //Берем поле
-
 //Добавляем обработчик всем полям формы
 function setEventListener(formElement, object){
   const inputList = Array.from(formElement.querySelectorAll(object.inputSelector));
@@ -76,7 +72,7 @@ enableValidation({
     formSelector: '.form',
     inputSelector: '.form__field',
     submitButtonSelector: '.form__submit-button',
-    inactiveButtonClass: 'form__submit',
+    inactiveButtonClass: 'form__submit-button_disabled',
     inputErrorClass: 'form__field-error',
     errorClass: 'form__input-error_active'
 }); 

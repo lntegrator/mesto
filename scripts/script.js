@@ -1,19 +1,21 @@
+//Импорт
+
 //Переменные кнопок
-const edit = document.querySelector('.profile__edit-button');
-const addButton = document.querySelector('.profile__add-button');
+const buttonEdit = document.querySelector('.profile__edit-button');
+const buttonAdd = document.querySelector('.profile__add-button');
 
 //Попап профиля
 const popupProfile = document.querySelector('.popup_type_profile');
-const closeButtonProfile = popupProfile.querySelector('.popup__button-close');
+const buttonProfileClose = popupProfile.querySelector('.popup__button-close');
 
 //Попап места
 const popupMesto = document.querySelector('.popup_type_mesto');
-const closeButtonMesto = popupMesto.querySelector('.popup__button-close');
-const createCardButton = popupMesto.querySelector('.form__submit-button');
+const buttonMestoClose = popupMesto.querySelector('.popup__button-close');
+const buttonCreateCard = popupMesto.querySelector('.form__submit-button');
 
 //Попап фото
 const popupPhoto = document.querySelector('.popup_type_photo');
-const closeButtonPhoto = popupPhoto.querySelector('.popup__button-close');
+const buttonPhotoClose = popupPhoto.querySelector('.popup__button-close');
 const imagePopupPhoto = popupPhoto.querySelector('.popup__photo');
 const captionPopupPhoto = popupPhoto.querySelector('.popup__caption');
 
@@ -64,22 +66,27 @@ const initialCards = [
   ];
 
 //Слушатели событий
-edit.addEventListener('click', () => openPopup(popupProfile));
-addButton.addEventListener('click', () => openPopup(popupMesto));
-closeButtonProfile.addEventListener('click', () => {closePopUp(popupProfile)});
-closeButtonMesto.addEventListener('click', () => {closePopUp(popupMesto)});
+buttonEdit.addEventListener('click', () => openPopup(popupProfile));
+buttonAdd.addEventListener('click', () => openPopup(popupMesto));
+buttonProfileClose.addEventListener('click', () => {closePopUp(popupProfile)});
+buttonMestoClose.addEventListener('click', () => {closePopUp(popupMesto)});
 formProfile.addEventListener('submit', formSubmitHandler);
 formMesto.addEventListener('submit', formMestoSubmit);
-closeButtonPhoto.addEventListener('click', () => closePopUp(popupPhoto));
+buttonPhotoClose.addEventListener('click', () => closePopUp(popupPhoto));
 
 //Функция открытия попапов
 function openPopup(popupType){
     popupType.classList.add('popup_opened');
     if (popupType == popupProfile){
-      nameInput.value = personName.textContent;
-      jobInput.value = description.textContent;
+      fillProfilePopup();
     }
     document.addEventListener('keydown', closeEsc)
+};
+
+//Функция подставления значения в попап профиля со страницы
+function fillProfilePopup(){
+  nameInput.value = personName.textContent;
+  jobInput.value = description.textContent;
 };
 
 //Функция закрытия попапов
@@ -95,6 +102,8 @@ function formMestoSubmit (evt){
     sectionCards.prepend(newCard);
     closePopUp(popupMesto);
     formMesto.reset();
+    buttonCreateCard.classList.add('form__submit-button_disabled');
+    buttonCreateCard.setAttribute('disabled', true);
 };
 
 //Функция создания карточки
@@ -105,7 +114,7 @@ function createCard (mestoName, mestoLink){
     //Создаем карточку
     cardPhoto.src = mestoLink;
     cardElement.querySelector('.element__name').textContent = mestoName;
-    cardElement.querySelector('.element__image').alt = mestoName;
+    cardPhoto.alt = mestoName;
 
     //Лайк карточки
     const likeButton = cardElement.querySelector('.element__button');
@@ -122,11 +131,13 @@ function createCard (mestoName, mestoLink){
     cardPhoto.addEventListener('click', function(evt){
         const mesto = evt.target;
         imagePopupPhoto.src = mesto.src;
+        imagePopupPhoto.alt = mesto.alt;
         captionPopupPhoto.textContent = mesto.alt;
         openPopup(popupPhoto);
     });
     
     return cardElement;
+    //validate.enableValidation();
 }
 
 //Функция лайка карточки
@@ -163,4 +174,4 @@ const overlayPhoto = document.querySelector('.popup__overlay_photo');
 //Слушаем клики на оверлеи для закрытия
 overlayProfile.addEventListener('click', () => closePopUp(popupProfile));
 overlayMesto.addEventListener('click', () => closePopUp(popupMesto));
-overlayPhoto.addEventListener('click', () => closePopUp(popupPhoto));
+overlayPhoto.addEventListener('click', () => closePopUp(popupProfile));
