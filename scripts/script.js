@@ -1,4 +1,6 @@
 //Импорт
+import { Card } from "./Card.js";
+
 
 //Переменные кнопок
 const buttonEdit = document.querySelector('.profile__edit-button');
@@ -16,8 +18,8 @@ const buttonCreateCard = popupMesto.querySelector('.form__submit-button');
 //Попап фото
 const popupPhoto = document.querySelector('.popup_type_photo');
 const buttonPhotoClose = popupPhoto.querySelector('.popup__button-close');
-const imagePopupPhoto = popupPhoto.querySelector('.popup__photo');
-const captionPopupPhoto = popupPhoto.querySelector('.popup__caption');
+export const imagePopupPhoto = popupPhoto.querySelector('.popup__photo');
+export const captionPopupPhoto = popupPhoto.querySelector('.popup__caption');
 
 //Имя и описание пользователя
 const personName = document.querySelector('.profile__title');
@@ -82,7 +84,7 @@ function fillProfilePopup(popupType){
 };
 
 //Функция открытия попапов
-function openPopup(popupType){
+export function openPopup(popupType){
     popupType.classList.add('popup_opened');
     document.addEventListener('keydown', closeEsc)
 };
@@ -96,7 +98,7 @@ function closePopUp(popupType){
 //Функция сохранения карточки
 function formMestoSubmit (evt){
     evt.preventDefault();
-    const newCard = createCard(inputMesto.value, inputLink.value);
+    const newCard = createCard(inputMesto.value, inputLink.value, '.card-template');
     sectionCards.prepend(newCard);
     closePopUp(popupMesto);
     formMesto.reset();
@@ -105,47 +107,16 @@ function formMestoSubmit (evt){
 };
 
 //Функция создания карточки
-function createCard (mestoName, mestoLink){
-    const cardElement = card.querySelector('.element').cloneNode(true);
-    const cardPhoto = cardElement.querySelector('.element__image');
-
-    //Создаем карточку
-    cardPhoto.src = mestoLink;
-    cardElement.querySelector('.element__name').textContent = mestoName;
-    cardPhoto.alt = mestoName;
-
-    //Лайк карточки
-    const likeButton = cardElement.querySelector('.element__button');
-    likeButton.addEventListener('click', likeCard);
-
-    //Удаление карточки
-    const deleteCard = cardElement.querySelector('.element__delete');
-    deleteCard.addEventListener('click', function(){
-        const currentCard = deleteCard.closest('.element');
-        currentCard.remove();
-    });
-
-    //Открытие фото в попапе
-    cardPhoto.addEventListener('click', function(evt){
-        const mesto = evt.target;
-        imagePopupPhoto.src = mesto.src;
-        imagePopupPhoto.alt = mesto.alt;
-        captionPopupPhoto.textContent = mesto.alt;
-        openPopup(popupPhoto);
-    });
-    
+function createCard (mestoName, mestoLink, cardSelector){
+  console.log('check');
+    const card = new Card(mestoName, mestoLink, cardSelector);
+    const cardElement = card.makeCard();
     return cardElement;
-    //validate.enableValidation();
-}
-
-//Функция лайка карточки
-function likeCard(evt) {
-  evt.target.classList.toggle('element__button_active');
 }
 
 //Генерация карточек из массива
-initialCards.forEach(function(item){
-  sectionCards.append(createCard(item.name, item.link));
+initialCards.forEach((item) => {
+  sectionCards.append(createCard(item.name, item.link, '.card-template'));
 });
 
 //Функция сохранения изменения профиля
