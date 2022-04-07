@@ -1,5 +1,6 @@
 //Импорт
 import { Card } from "./Card.js";
+import { FormValidator } from "./FormValidator.js";
 
 
 //Переменные кнопок
@@ -108,7 +109,6 @@ function formMestoSubmit (evt){
 
 //Функция создания карточки
 function createCard (mestoName, mestoLink, cardSelector){
-  console.log('check');
     const card = new Card(mestoName, mestoLink, cardSelector);
     const cardElement = card.makeCard();
     return cardElement;
@@ -144,3 +144,22 @@ const overlayPhoto = document.querySelector('.popup__overlay_photo');
 overlayProfile.addEventListener('click', () => closePopUp(popupProfile));
 overlayMesto.addEventListener('click', () => closePopUp(popupMesto));
 overlayPhoto.addEventListener('click', () => closePopUp(popupPhoto));
+
+//Объект с селекторами для передачи его в класс валидации
+const object = {
+  formSelector: '.form',
+  inputSelector: '.form__field',
+  submitButtonSelector: '.form__submit-button',
+  inactiveButtonClass: 'form__submit-button_disabled',
+  inputErrorClass: 'form__field-error',
+  errorClass: 'form__input-error_active'
+}
+
+//Подключаем валидацию форм
+//Валидация формы профиля
+const formProfileValidation = new FormValidator(object, formProfile);
+formProfileValidation.enableValidation();
+
+//Валидация формы добавления карточки
+const formMestoValidation = new FormValidator(object, formMesto);
+formMestoValidation.enableValidation();
