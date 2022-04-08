@@ -1,6 +1,5 @@
 //Импорт
-import { Card } from "./Card.js";
-import { FormValidator } from "./FormValidator.js";
+import { Card, FormValidator } from "./imports.js";
 
 
 //Переменные кнопок
@@ -14,10 +13,10 @@ const buttonProfileClose = popupProfile.querySelector('.popup__button-close');
 //Попап места
 const popupMesto = document.querySelector('.popup_type_mesto');
 const buttonMestoClose = popupMesto.querySelector('.popup__button-close');
-const buttonCreateCard = popupMesto.querySelector('.form__submit-button');
+export const buttonCreateCard = popupMesto.querySelector('.form__submit-button');
 
 //Попап фото
-const popupPhoto = document.querySelector('.popup_type_photo');
+export const popupPhoto = document.querySelector('.popup_type_photo');
 const buttonPhotoClose = popupPhoto.querySelector('.popup__button-close');
 export const imagePopupPhoto = popupPhoto.querySelector('.popup__photo');
 export const captionPopupPhoto = popupPhoto.querySelector('.popup__caption');
@@ -103,8 +102,7 @@ function formMestoSubmit (evt){
     sectionCards.prepend(newCard);
     closePopUp(popupMesto);
     formMesto.reset();
-    buttonCreateCard.classList.add('form__submit-button_disabled');
-    buttonCreateCard.setAttribute('disabled', true);
+    formMestoValidation.blockButton();
 };
 
 //Функция создания карточки

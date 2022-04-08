@@ -1,3 +1,5 @@
+import { buttonCreateCard } from "./imports.js";
+
 export class FormValidator{
   constructor(object, formElement){
     this._formElement = formElement;
@@ -30,7 +32,6 @@ export class FormValidator{
       buttonElement.disabled = true;
     }
     else {
-      console.log('on')
       buttonElement.classList.remove(this._inactiveButtonClass);
       buttonElement.disabled = false;
     }
@@ -67,6 +68,12 @@ export class FormValidator{
     field.classList.remove(this._inputErrorClass);
     errorElement.classList.remove(this._errorClass);
     errorElement.textContent = '';
+  }
+
+  //Публичный метод блокировки кнопки сохранения
+  blockButton(){
+    buttonCreateCard.classList.add(this._inactiveButtonClass);
+    buttonCreateCard.setAttribute('disabled', true);
   }
 
   enableValidation(){

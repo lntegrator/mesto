@@ -1,4 +1,4 @@
-import { imagePopupPhoto, openPopup, captionPopupPhoto } from "./script.js";
+import { popupPhoto, imagePopupPhoto, openPopup, captionPopupPhoto } from "./imports.js";
 
 export class Card {
     constructor(name, link, templateSelector){
@@ -31,15 +31,13 @@ export class Card {
 
         //Удаление карточки
         this._deleteButton = this._card.querySelector('.element__delete');
-        this._deleteButton.addEventListener('click', () => {
-            this._card.remove();
-        })
+        this._deleteButton.addEventListener('click', this._deleteCard);
 
+        //Слушатель клика по карточке
         cardPhoto.addEventListener('click', () => {
             imagePopupPhoto.src = this._image;
             imagePopupPhoto.alt = this._name;
             captionPopupPhoto.textContent = this._name;
-            const popupPhoto = document.querySelector('.popup_type_photo');
             openPopup(popupPhoto);
         } )
 
@@ -47,6 +45,14 @@ export class Card {
         return this._card;
     }
 
+    //Метод подставления данных в попап
+
+    //Метод удаления карточки
+    _deleteCard(evt){
+        evt.target.closest('.element').remove();
+    }
+
+    //Метод переключения стиля кнопки лайка при клике
     _likeCard(evt){
         evt.target.classList.toggle('element__button_active');
     }
