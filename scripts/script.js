@@ -1,5 +1,6 @@
 //Импорт
 import { Card, FormValidator } from "./imports.js";
+import Section from "./Section.js";
 
 
 //Переменные кнопок
@@ -37,7 +38,6 @@ const jobInput = formProfile.querySelector('.form__field_type_job');
 const card = document.querySelector('.card-template').content;
 const cardName = document.querySelector('.element__name');
 const cardImage = document.querySelector('.element__image');
-const sectionCards = document.querySelector('.elements');
 
 //Массив данных карточек
 const initialCards = [
@@ -113,9 +113,19 @@ function createCard (mestoName, mestoLink, cardSelector){
 }
 
 //Генерация карточек из массива
-initialCards.forEach((item) => {
-  sectionCards.append(createCard(item.name, item.link, '.card-template'));
-});
+const cardsList = new Section({ items: initialCards, 
+  renderer: (item) => {
+    const card = new Card(item.name, item.link, '.card-template');
+    const cardElement = card.makeCard();
+    cardsList.addItem(cardElement);
+  },
+}, '.elements' );
+
+cardsList.renderItems();
+
+//initialCards.forEach((item) => {
+  //sectionCards.append(createCard(item.name, item.link, '.card-template'));
+//});
 
 //Функция сохранения изменения профиля
 function formSubmitHandler (evt) {
