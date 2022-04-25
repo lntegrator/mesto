@@ -107,7 +107,11 @@ function formMestoSubmit (evt){
 
 //Функция создания карточки
 function createCard (mestoName, mestoLink, cardSelector){
-    const card = new Card(mestoName, mestoLink, cardSelector);
+    const card = new Card({ name:mestoName,
+      link:mestoLink,
+      handleCardClick: () => {
+        
+      }},  cardSelector);
     const cardElement = card.makeCard();
     return cardElement;
 }
@@ -115,7 +119,7 @@ function createCard (mestoName, mestoLink, cardSelector){
 //Генерация карточек из массива
 const cardsList = new Section({ items: initialCards, 
   renderer: (item) => {
-    const card = new Card(item.name, item.link, '.card-template');
+    const card = new Card({name:item.name, link:item.link}, '.card-template');
     const cardElement = card.makeCard();
     cardsList.addItem(cardElement);
   },

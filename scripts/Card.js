@@ -1,10 +1,11 @@
 import { popupPhoto, imagePopupPhoto, openPopup, captionPopupPhoto } from "./imports.js";
 
 export class Card {
-    constructor(name, link, templateSelector){
+    constructor( {name, link, handleCardClick}, templateSelector){
         this._image = link;
         this._name = name;
         this._selector = templateSelector;
+        this._handleCardClick = handleCardClick;
     }
 
     //Ищем шаблон карточки
