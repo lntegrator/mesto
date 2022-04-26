@@ -1,7 +1,5 @@
-import { popupPhoto, imagePopupPhoto, openPopup, captionPopupPhoto } from "./imports.js";
-
 export class Card {
-    constructor( {name, link, handleCardClick}, templateSelector){
+    constructor( { name, link, handleCardClick }, templateSelector){
         this._image = link;
         this._name = name;
         this._selector = templateSelector;
@@ -36,11 +34,18 @@ export class Card {
 
         //Слушатель клика по карточке
         cardPhoto.addEventListener('click', () => {
-            imagePopupPhoto.src = this._image;
-            imagePopupPhoto.alt = this._name;
-            captionPopupPhoto.textContent = this._name;
-            openPopup(popupPhoto);
-        } )
+            this._handleCardClick({
+                name: this._name,
+                link: this._link
+            })
+        })
+         
+        //cardPhoto.addEventListener('click', () => {
+            //imagePopupPhoto.src = this._image;
+            //imagePopupPhoto.alt = this._name;
+            //captionPopupPhoto.textContent = this._name;
+            //openPopup(popupPhoto);
+        //} )
 
         //Возвращаем карточку
         return this._card;

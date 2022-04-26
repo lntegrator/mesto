@@ -1,5 +1,5 @@
 //Импорт
-import { Card, FormValidator } from "./imports.js";
+import { Card, FormValidator, PopupWithImage } from "./imports.js";
 import Section from "./Section.js";
 
 
@@ -95,6 +95,10 @@ function closePopUp(popupType){
     document.removeEventListener('keydown', closeEsc);
 };
 
+
+//Создаем объект класса PopupWithImage
+const popupWithImage = new PopupWithImage('.popup_type_photo');
+
 //Функция сохранения карточки
 function formMestoSubmit (evt){
     evt.preventDefault();
@@ -110,8 +114,10 @@ function createCard (mestoName, mestoLink, cardSelector){
     const card = new Card({ name:mestoName,
       link:mestoLink,
       handleCardClick: () => {
-        
-      }},  cardSelector);
+        popupWithImage.open(mestoLink, mestoName)
+        console.log(mestoName)
+      },
+    },  cardSelector);
     const cardElement = card.makeCard();
     return cardElement;
 }
@@ -119,17 +125,12 @@ function createCard (mestoName, mestoLink, cardSelector){
 //Генерация карточек из массива
 const cardsList = new Section({ items: initialCards, 
   renderer: (item) => {
-    const card = new Card({name:item.name, link:item.link}, '.card-template');
-    const cardElement = card.makeCard();
-    cardsList.addItem(cardElement);
+    const card = createCard(item.name, item.link, '.card-template');
+    cardsList.addItem(card);
   },
 }, '.elements' );
 
 cardsList.renderItems();
-
-//initialCards.forEach((item) => {
-  //sectionCards.append(createCard(item.name, item.link, '.card-template'));
-//});
 
 //Функция сохранения изменения профиля
 function formSubmitHandler (evt) {
