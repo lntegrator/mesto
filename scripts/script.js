@@ -1,6 +1,7 @@
 //Импорт
-import { Card, FormValidator, PopupWithImage } from "./imports.js";
+import { Card, FormValidator, PopupWithImage, PopupWithForm } from "./imports.js";
 import Section from "./Section.js";
+import UserInfo from "./UserInfo.js";
 
 
 //Переменные кнопок
@@ -67,15 +68,6 @@ const initialCards = [
     }
   ];
 
-//Слушатели событий
-buttonEdit.addEventListener('click', () => fillProfilePopup(popupProfile));
-buttonAdd.addEventListener('click', () => openPopup(popupMesto));
-buttonProfileClose.addEventListener('click', () => {closePopUp(popupProfile)});
-buttonMestoClose.addEventListener('click', () => {closePopUp(popupMesto)});
-formProfile.addEventListener('submit', formSubmitHandler);
-formMesto.addEventListener('submit', formMestoSubmit);
-buttonPhotoClose.addEventListener('click', () => closePopUp(popupPhoto));
-
 //Функция подставления значения в попап профиля со страницы
 function fillProfilePopup(popupType){
   nameInput.value = personName.textContent;
@@ -83,31 +75,52 @@ function fillProfilePopup(popupType){
   openPopup(popupType);
 };
 
-//Функция открытия попапов
-export function openPopup(popupType){
-    popupType.classList.add('popup_opened');
-    document.addEventListener('keydown', closeEsc)
-};
+//Функция сохранения изменения профиля
+function formSubmitHandler (evt) {
+  evt.preventDefault();
+  personName.textContent = nameInput.value;
+  description.textContent = jobInput.value;
+  closePopUp(popupProfile);
+}
 
-//Функция закрытия попапов
-function closePopUp(popupType){
-    popupType.classList.remove('popup_opened');
-    document.removeEventListener('keydown', closeEsc);
-};
-
+//Объект класса UserInfo
+const userInfo = new UserInfo({nameSelector:'.profile__title',
+  descriptionSelector:'.profile__subtitle'})
 
 //Создаем объект класса PopupWithImage
 const popupWithImage = new PopupWithImage('.popup_type_photo');
 
-//Функция сохранения карточки
-function formMestoSubmit (evt){
-    evt.preventDefault();
-    const newCard = createCard(inputMesto.value, inputLink.value, '.card-template');
-    sectionCards.prepend(newCard);
-    closePopUp(popupMesto);
-    formMesto.reset();
-    formMestoValidation.blockButton();
-};
+//Создаем объект класса PopupWithForm для попапа добавления карточки
+const popupAddingCard = new PopupWithForm({ handleSubmit: (inputsValues) => {
+  const card = createCard(inputsValues.mestoName, inputsValues.mestoLink, '.card-template');
+  cardsList.addItem(card);
+}
+}, '.popup_type_mesto');
+
+//Создаем объект класса PopupWithForm для попапа редактирования профиля
+const popupDescription = new PopupWithForm({
+  handleSubmit:(inputsValues) => {
+    console.log(inputsValues);
+    userInfo.setUserInfo({
+      name: inputsValues.personName,
+      description: inputsValues.pesronDescription
+    })
+}}, '.popup_type_profile');
+
+//Слушатель кнопки добавления карточки
+buttonAdd.addEventListener('click', () => {
+  popupAddingCard.open();
+});
+
+//Слушатель кнопки редактирования профиля
+buttonEdit.addEventListener('click', () => {
+  const userInformation = userInfo.getUserInfo();
+  const userName = userInformation.name;
+  const userDescription = userInformation.description;
+  nameInput.value = userName;
+  jobInput.value = userDescription;
+  popupDescription.open();
+})
 
 //Функция создания карточки
 function createCard (mestoName, mestoLink, cardSelector){
@@ -115,12 +128,16 @@ function createCard (mestoName, mestoLink, cardSelector){
       link:mestoLink,
       handleCardClick: () => {
         popupWithImage.open(mestoLink, mestoName)
-        console.log(mestoName)
       },
     },  cardSelector);
     const cardElement = card.makeCard();
     return cardElement;
 }
+
+//Слушатели закрытия попапов
+popupWithImage.setEventListeners();
+popupAddingCard.setEventListeners();
+popupDescription.setEventListeners();
 
 //Генерация карточек из массива
 const cardsList = new Section({ items: initialCards, 
@@ -131,32 +148,6 @@ const cardsList = new Section({ items: initialCards,
 }, '.elements' );
 
 cardsList.renderItems();
-
-//Функция сохранения изменения профиля
-function formSubmitHandler (evt) {
-  evt.preventDefault();
-  personName.textContent = nameInput.value;
-  description.textContent = jobInput.value;
-  closePopUp(popupProfile);
-}
-
-//Функция закрытия попапа при нажатии Esc
-function closeEsc(evt) {
-  if (evt.key === 'Escape') {
-    const openedPopup = document.querySelector('.popup_opened');
-    closePopUp(openedPopup);
-  }
-};
-
-//Находим все оверлеи для отслеживания кликов по ним
-const overlayProfile = document.querySelector('.popup__overlay_profile');
-const overlayMesto = document.querySelector('.popup__overlay_mesto');
-const overlayPhoto = document.querySelector('.popup__overlay_photo');
-
-//Слушаем клики на оверлеи для закрытия
-overlayProfile.addEventListener('click', () => closePopUp(popupProfile));
-overlayMesto.addEventListener('click', () => closePopUp(popupMesto));
-overlayPhoto.addEventListener('click', () => closePopUp(popupPhoto));
 
 //Объект с селекторами для передачи его в класс валидации
 const object = {
