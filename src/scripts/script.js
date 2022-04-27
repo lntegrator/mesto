@@ -1,4 +1,5 @@
 //Импорт
+import '../pages/index.css'
 import { Card, FormValidator, PopupWithImage, PopupWithForm } from "./imports.js";
 import Section from "./Section.js";
 import UserInfo from "./UserInfo.js";
