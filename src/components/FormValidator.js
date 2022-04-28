@@ -1,4 +1,4 @@
-import { buttonCreateCard } from "./imports.js";
+import { buttonCreateCard } from "../utils/constants.js";
 
 export class FormValidator{
   constructor(object, formElement){

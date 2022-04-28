@@ -24,34 +24,26 @@ export class Card {
         cardName.textContent = this._name;
         cardPhoto.alt = this._name;
 
-        //Лайк карточки
-        this._iconLike = this._card.querySelector('.element__button');
-        this._iconLike.addEventListener('click', this._likeCard);
-
-        //Удаление карточки
-        this._deleteButton = this._card.querySelector('.element__delete');
-        this._deleteButton.addEventListener('click', this._deleteCard);
-
-        //Слушатель клика по карточке
-        cardPhoto.addEventListener('click', () => {
-            this._handleCardClick({
-                name: this._name,
-                link: this._link
-            })
-        })
-         
-        //cardPhoto.addEventListener('click', () => {
-            //imagePopupPhoto.src = this._image;
-            //imagePopupPhoto.alt = this._name;
-            //captionPopupPhoto.textContent = this._name;
-            //openPopup(popupPhoto);
-        //} )
+        this._setEventListeners();
 
         //Возвращаем карточку
         return this._card;
     }
 
-    //Метод подставления данных в попап
+    //Метод навешивания обработчиков
+    _setEventListeners(){
+        //По кнопке лайка
+        this._card.querySelector('.element__button').addEventListener('click', this._likeCard);
+        //По кнопке удаления
+        this._card.querySelector('.element__delete').addEventListener('click', this._deleteCard);
+        //По изображению карточки
+        this._card.querySelector('.element__image').addEventListener('click', () => {
+            this._handleCardClick({
+                name: this._name,
+                link: this._link
+            })
+        })
+    }
 
     //Метод удаления карточки
     _deleteCard(evt){
