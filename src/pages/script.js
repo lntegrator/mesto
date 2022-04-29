@@ -35,6 +35,7 @@ const popupDescription = new PopupWithForm({
 
 //Слушатель кнопки добавления карточки
 buttonAdd.addEventListener('click', () => {
+  formProfileValidation.toggleButtonState()
   popupAddingCard.open();
 });
 
@@ -45,6 +46,7 @@ buttonEdit.addEventListener('click', () => {
   const userDescription = userInformation.description;
   nameInput.value = userName;
   jobInput.value = userDescription;
+  formMestoValidation.toggleButtonState();
   popupDescription.open();
 })
 

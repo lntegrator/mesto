@@ -13,58 +13,59 @@ export class FormValidator{
 
   //Метод установки слушателя на форму
   _setEventListener(){
-    const inputList = Array.from(this._formElement.querySelectorAll(this._inputSelector));
-    const buttonElement = this._formElement.querySelector(this._submitButtonSelector);
-    this._toggleButtonState(inputList, buttonElement);
+    this.inputList = Array.from(this._formElement.querySelectorAll(this._inputSelector));
+    this.buttonElement = this._formElement.querySelector(this._submitButtonSelector);
+    this.toggleButtonState();
 
-    inputList.forEach((inputElement) => {
+    this.inputList.forEach((inputElement) => {
       inputElement.addEventListener('input', () => {
-        this._isValid(this._formElement, inputElement);
-        this._toggleButtonState(inputList, buttonElement);
+        this._isValid(inputElement);
+        this.toggleButtonState();
       })
     })
   };
 
   //Метод переключения состояния кнопки отправки
-  _toggleButtonState(inputList, buttonElement){
-    if (this._hasInvalid(inputList)){
-      buttonElement.classList.add(this._inactiveButtonClass);
-      buttonElement.disabled = true;
+  toggleButtonState(){
+    if (this._hasInvalid()){
+      this.buttonElement.classList.add(this._inactiveButtonClass);
+      this.buttonElement.disabled = true;
+      this.blockButton();
     }
     else {
-      buttonElement.classList.remove(this._inactiveButtonClass);
-      buttonElement.disabled = false;
+      this.buttonElement.classList.remove(this._inactiveButtonClass);
+      this.buttonElement.disabled = false;
     }
   };
 
   //Метод проверки валидности всех полей для работы с кнопкой
-  _hasInvalid(inputList){
-    return inputList.some((inputElement) => {
+  _hasInvalid(){
+    return this.inputList.some((inputElement) => {
       return !inputElement.validity.valid;
     })
   }
 
   //Метод проверки валидности поля
-  _isValid(formElement, inputElement){
+  _isValid(inputElement){
     if (!inputElement.validity.valid){
-      this._showInputError(formElement, inputElement, inputElement.validationMessage);
+      this._showInputError(inputElement, inputElement.validationMessage);
     }
     else{
-      this._hideInputError(formElement, inputElement)
+      this._hideInputError(inputElement)
     }
   }
 
   //Метод отображения ошибки валидации
-  _showInputError(formElement, field, errorMessage){
-    const errorElement = formElement.querySelector(`.${field.id}-error`)
+  _showInputError(field, errorMessage){
+    const errorElement = this._formElement.querySelector(`.${field.id}-error`)
     field.classList.add(this._inputErrorClass);
     errorElement.classList.add(this._errorClass);
     errorElement.textContent = errorMessage;
   }
 
   //Метод скрытия ошибки валидации
-  _hideInputError = (formElement, field) => {
-    const errorElement = formElement.querySelector(`.${field.id}-error`);
+  _hideInputError = (field) => {
+    const errorElement = this._formElement.querySelector(`.${field.id}-error`);
     field.classList.remove(this._inputErrorClass);
     errorElement.classList.remove(this._errorClass);
     errorElement.textContent = '';
