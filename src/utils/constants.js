@@ -12,6 +12,7 @@ export const buttonCreateCard = popupMesto.querySelector('.form__submit-button')
 //Имя и описание пользователя
 export const personName = document.querySelector('.profile__title');
 export const description = document.querySelector('.profile__subtitle');
+export const avatar = document.querySelector('.profile__avatar');
 
 //Формы и поля
 export const formMesto = popupMesto.querySelector('.form');
@@ -58,3 +59,7 @@ export const validationConfig = {
     inputErrorClass: 'form__field-error',
     errorClass: 'form__input-error_active'
   }
+
+  //Токен и идентификатор группы:
+  export const myToken = 'c3260d2e-4f66-4b7f-aede-32be2658939f';
+  export const groupId = 'cohort-40';

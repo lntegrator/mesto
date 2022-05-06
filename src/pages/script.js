@@ -7,12 +7,9 @@ import PopupWithForm from '../components/PopupWithForm.js';
 import Section from "../components/Section.js";
 import UserInfo from "../components/UserInfo.js";
 import { buttonEdit, buttonAdd,
-  formProfile, formMesto, inputMesto, inputLink, nameInput, jobInput,
-  initialCards, personName, description, validationConfig} from "../utils/constants.js"
-
-//Объект класса UserInfo
-const userInfo = new UserInfo({nameSelector:'.profile__title',
-  descriptionSelector:'.profile__subtitle'})
+  formProfile, formMesto, nameInput, jobInput,
+  initialCards,validationConfig, myToken, groupId, personName, description, avatar} from "../utils/constants.js"
+import Api from '../components/Api.js';
 
 //Создаем объект класса PopupWithImage
 const popupWithImage = new PopupWithImage('.popup_type_photo');
@@ -24,6 +21,16 @@ const popupAddingCard = new PopupWithForm({ handleSubmit: (inputsValues) => {
 }
 }, '.popup_type_mesto');
 
+//Слушатель кнопки добавления карточки
+buttonAdd.addEventListener('click', () => {
+  formProfileValidation.toggleButtonState()
+  popupAddingCard.open();
+});
+
+//Объект класса UserInfo
+const userInfo = new UserInfo({nameSelector:'.profile__title',
+  descriptionSelector:'.profile__subtitle'})
+
 //Создаем объект класса PopupWithForm для попапа редактирования профиля
 const popupDescription = new PopupWithForm({
   handleSubmit:(inputsValues) => {
@@ -32,12 +39,6 @@ const popupDescription = new PopupWithForm({
       description: inputsValues.pesronDescription
     })
 }}, '.popup_type_profile');
-
-//Слушатель кнопки добавления карточки
-buttonAdd.addEventListener('click', () => {
-  formProfileValidation.toggleButtonState()
-  popupAddingCard.open();
-});
 
 //Слушатель кнопки редактирования профиля
 buttonEdit.addEventListener('click', () => {
@@ -85,3 +86,18 @@ formProfileValidation.enableValidation();
 //Валидация формы добавления карточки
 const formMestoValidation = new FormValidator(validationConfig, formMesto);
 formMestoValidation.enableValidation();
+
+//РАБОТА С API
+
+//Объект класса Api
+const api = new Api({
+  authorization: myToken,
+})
+
+//Получаем информацию и заполняем в .then
+api.getInfo(`https://nomoreparties.co/v1/${groupId}/users/me`) //О пользователе
+  .then(res => {
+    personName.textContent = res.name;
+    description.textContent = res.about;
+    avatar.src = res.avatar;
+  })
