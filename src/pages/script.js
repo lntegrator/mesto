@@ -8,24 +8,11 @@ import Section from "../components/Section.js";
 import UserInfo from "../components/UserInfo.js";
 import { buttonEdit, buttonAdd,
   formProfile, formMesto, nameInput, jobInput,
-  initialCards,validationConfig, myToken, groupId, personName, description, avatar} from "../utils/constants.js"
+  validationConfig, myToken, groupId, personName, description, avatar} from "../utils/constants.js"
 import Api from '../components/Api.js';
 
 //Создаем объект класса PopupWithImage
 const popupWithImage = new PopupWithImage('.popup_type_photo');
-
-//Создаем объект класса PopupWithForm для попапа добавления карточки
-const popupAddingCard = new PopupWithForm({ handleSubmit: (inputsValues) => {
-  const card = createCard(inputsValues.mestoName, inputsValues.mestoLink, '.card-template');
-  cardsList.addItem(card);
-}
-}, '.popup_type_mesto');
-
-//Слушатель кнопки добавления карточки
-buttonAdd.addEventListener('click', () => {
-  formProfileValidation.toggleButtonState()
-  popupAddingCard.open();
-});
 
 //Объект класса UserInfo
 const userInfo = new UserInfo({nameSelector:'.profile__title',
@@ -65,18 +52,7 @@ function createCard (mestoName, mestoLink, cardSelector){
 
 //Слушатели закрытия попапов
 popupWithImage.setEventListeners();
-popupAddingCard.setEventListeners();
 popupDescription.setEventListeners();
-
-//Генерация карточек из массива
-const cardsList = new Section({ items: initialCards, 
-  renderer: (item) => {
-    const card = createCard(item.name, item.link, '.card-template');
-    cardsList.addItem(card);
-  },
-}, '.elements' );
-
-cardsList.renderItems();
 
 //Подключаем валидацию форм
 //Валидация формы профиля
@@ -100,4 +76,35 @@ api.getInfo(`https://nomoreparties.co/v1/${groupId}/users/me`) //О пользо
     personName.textContent = res.name;
     description.textContent = res.about;
     avatar.src = res.avatar;
+  })
+  .then((res) => {
+    api.getInfo(`https://nomoreparties.co/v1/${groupId}/cards`)
+    .then(res => {
+       console.log(res)
+      //Генерация карточек из массива
+      const cardsList = new Section({ items: res, 
+        renderer: (item) => {
+          const card = createCard(item.name, item.link, '.card-template');
+          cardsList.addItem(card);
+        },
+      }, '.elements' );
+
+      cardsList.renderItems();
+
+      //Создаем объект класса PopupWithForm для попапа добавления карточки
+      const popupAddingCard = new PopupWithForm({ handleSubmit: (inputsValues) => {
+        const card = createCard(inputsValues.mestoName, inputsValues.mestoLink, '.card-template');
+        cardsList.addItem(card);
+      }
+      }, '.popup_type_mesto');
+
+      //Слушатель кнопки добавления карточки
+      buttonAdd.addEventListener('click', () => {
+        formProfileValidation.toggleButtonState()
+        popupAddingCard.open();
+      });
+
+      popupAddingCard.setEventListeners();
+
+    })
   })
