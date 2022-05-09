@@ -10,6 +10,21 @@ export default class Api{
         }));
     }
 
+    postCard(link, cardInfo){
+        return this._sendRequest()
+    }
+
+    patchInfo(link, info){
+        return this._sendRequest(fetch(link, {
+            method: 'PATCH',
+            headers: this._headers,
+            body: JSON.stringify({
+                name: info.personName,
+                about: info.personDescription
+            })
+        }))
+    }
+
     _sendRequest(promise){
         return promise
             .then((res) => {
@@ -24,4 +39,5 @@ export default class Api{
                 return res
             })
     }
+
 }
