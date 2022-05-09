@@ -11,7 +11,15 @@ export default class Api{
     }
 
     postCard(link, cardInfo){
-        return this._sendRequest()
+        console.log(link, cardInfo)
+        return this._sendRequest(fetch(link, {
+            method: 'POST',
+            headers: this._headers,
+            body: JSON.stringify({
+                name: cardInfo.mestoName,
+                link: cardInfo.mestoLink
+            })
+        }))
     }
 
     patchInfo(link, info){

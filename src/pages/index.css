@@ -41,3 +41,5 @@
 @import url('../blocks/form/__input-error/_active/form__input-error_active.css');
 @import url('../blocks/form/__submit-button/_disabled/form__submit-button_disabled.css');
 @import url('../blocks/popup/__overlay/popup__overlay.css');
+@import url('../blocks/element/__likes/element__likes.css');
+@import url('../blocks/element/__like-quantity/element__like-quantity.css');

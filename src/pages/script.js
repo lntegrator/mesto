@@ -15,13 +15,13 @@ import Api from '../components/Api.js';
 const popupWithImage = new PopupWithImage('.popup_type_photo');
 
 //Функция создания карточки
-function createCard (mestoName, mestoLink, cardSelector){
+function createCard (mestoName, mestoLink, cardSelector, mestoLikes){
     const card = new Card({ name:mestoName,
       link:mestoLink,
       handleCardClick: () => {
         popupWithImage.open(mestoLink, mestoName)
       },
-    },  cardSelector);
+    },  cardSelector, mestoLikes);
     const cardElement = card.makeCard();
     return cardElement;
 }
@@ -51,13 +51,13 @@ api.getInfo(`https://nomoreparties.co/v1/${groupId}/users/me`) //О пользо
     description.textContent = res.about;
     avatar.src = res.avatar;
   })
-  .then((res) => { //О первых карточках
+  .then((res) => { //О первых карточках + все остальные функции
     api.getInfo(`https://nomoreparties.co/v1/${groupId}/cards`)
     .then(res => {
       //Генерация карточек из массива
       const cardsList = new Section({ items: res, 
         renderer: (item) => {
-          const card = createCard(item.name, item.link, '.card-template');
+          const card = createCard(item.name, item.link, '.card-template',  item.likes,);
           cardsList.addItem(card);
         },
       }, '.elements' );
@@ -69,7 +69,7 @@ api.getInfo(`https://nomoreparties.co/v1/${groupId}/users/me`) //О пользо
         const card = createCard(inputsValues.mestoName, inputsValues.mestoLink, '.card-template');
         cardsList.addItem(card);
       }
-      }, '.popup_type_mesto');
+      }, '.popup_type_mesto', api, `https://mesto.nomoreparties.co/v1/${groupId}/cards`, 'postCard');
 
       //Слушатель кнопки добавления карточки
       buttonAdd.addEventListener('click', () => {

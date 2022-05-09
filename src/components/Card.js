@@ -1,9 +1,10 @@
 export class Card {
-    constructor( { name, link, handleCardClick }, templateSelector){
+    constructor( { name, link, handleCardClick }, templateSelector, likes=[]){
         this._image = link;
         this._name = name;
         this._selector = templateSelector;
         this._handleCardClick = handleCardClick;
+        this._likes = likes;
     }
 
     //Ищем шаблон карточки
@@ -18,11 +19,13 @@ export class Card {
         this._card = this._getTemplate();
         const cardPhoto = this._card.querySelector('.element__image');
         const cardName = this._card.querySelector('.element__name');
+        const cardLikes = this._card.querySelector('.element__like-quantity')
 
         //Заполнение карточки
         cardPhoto.src = this._image;
         cardName.textContent = this._name;
         cardPhoto.alt = this._name;
+        cardLikes.textContent = this._likes.length
 
         this._setEventListeners();
 

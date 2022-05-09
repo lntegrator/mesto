@@ -2,7 +2,6 @@
     min-width: 22px;
     height: 19px;
     transition: ease-in-out .3s;
-    margin-left: 10px;
     background: url('../../../images/heart.svg') content-box no-repeat;
     border: none;
     padding: 0;
