@@ -32,6 +32,13 @@ export default class Api{
         }))
     }
 
+    deleteCard(link, id){
+        return this._sendRequest(fetch(`${link}${id}`, {
+            method: 'DELETE',
+            headers: this._headers
+        }))
+    }
+
     _sendRequest(promise){
         return promise
             .then((res) => {

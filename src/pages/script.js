@@ -15,23 +15,6 @@ import PopupDelete from '../components/PopupDelete.js';
 //Создаем объект класса PopupWithImage
 const popupWithImage = new PopupWithImage('.popup_type_photo');
 
-//Объект класса PopupDelete
-const popupDeleteCard = new PopupDelete('.popup_type_delete', api, );
-
-//Функция создания карточки
-function createCard (mestoName, mestoLink, cardSelector, mestoOwner, myData, mestoLikes){
-    const card = new Card({ name:mestoName,
-      link:mestoLink,
-      handleCardClick: () => {
-        popupWithImage.open(mestoLink, mestoName)
-      },
-      handleDeleteClick: () => {
-        popupDeleteCard.open();
-      }
-    },  cardSelector, mestoOwner, myData, mestoLikes);
-    const cardElement = card.makeCard();
-    return cardElement;
-}
 
 //Подключаем валидацию форм
 //Валидация формы профиля
@@ -65,7 +48,7 @@ api.getInfo(`https://nomoreparties.co/v1/${groupId}/users/me`) //О пользо
       //Генерация карточек из массива
       const cardsList = new Section({ items: res, 
         renderer: (item) => {
-          const card = createCard(item.name, item.link, '.card-template',  item.owner, myData, item.likes);
+          const card = createCard(item.name, item.link, '.card-template',  item.owner, myData, item.likes, item._id);
           cardsList.addItem(card);
         },
       }, '.elements' );
@@ -74,7 +57,6 @@ api.getInfo(`https://nomoreparties.co/v1/${groupId}/users/me`) //О пользо
 
       //Создаем объект класса PopupWithForm для попапа добавления карточки
       const popupAddingCard = new PopupWithForm({ handleSubmit: (inputsValues) => {
-        console.log(myData)
         const card = createCard(inputsValues.mestoName, inputsValues.mestoLink, '.card-template', myData, myData);
         cardsList.addItem(card);
       }
@@ -108,6 +90,32 @@ api.getInfo(`https://nomoreparties.co/v1/${groupId}/users/me`) //О пользо
           description: inputsValues.personDescription
         })
       }}, '.popup_type_profile', api, `https://nomoreparties.co/v1/${groupId}/users/me`, 'patchInfo');
+
+      //Объект класса PopupDelete
+      const popupDeleteCard = new PopupDelete(
+        '.popup_type_delete',
+        api,
+        'deleteCard',
+        `https://mesto.nomoreparties.co/v1/${groupId}/cards/`,
+        {handleDelete: (id) => console.log(id)},
+        );
+
+      //Функция создания карточки
+      function createCard (mestoName, mestoLink, cardSelector, mestoOwner, myData, mestoLikes, cardId){
+        const card = new Card({ 
+          name:mestoName,
+          link:mestoLink,
+          handleCardClick: () => {
+            popupWithImage.open(mestoLink, mestoName)
+          },
+          handleDeleteClick: (id) => {
+            popupDeleteCard.cardId(id); //Получаем ID карточки
+            popupDeleteCard.open();
+          }
+        },  cardSelector, mestoOwner, myData, mestoLikes, cardId);
+        const cardElement = card.makeCard();
+        return cardElement;
+      }
 
       //Слушатели закрытия попапов
       popupWithImage.setEventListeners();

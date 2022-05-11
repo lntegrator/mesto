@@ -1,12 +1,13 @@
 export class Card {
-    constructor( {name, link, handleCardClick, handleDeleteClick }, templateSelector, mestoOwner, myData, likes =[]){
+    constructor( {name, link, handleCardClick, handleDeleteClick }, templateSelector, mestoOwner, myData, likes =[], cardId){
         this._image = link;
         this._name = name;
         this._selector = templateSelector;
         this._handleCardClick = handleCardClick;
         this._likes = likes;
         this._owner = mestoOwner;
-        this.myData = myData;
+        this._myData = myData;
+        this._cardId = cardId;
         this._handleDeleteClick = handleDeleteClick;
     }
 
@@ -38,14 +39,16 @@ export class Card {
 
     //Метод навешивания обработчиков
     _setEventListeners(){
+        
         //По кнопке лайка
         this._card.querySelector('.element__button').addEventListener('click', this._likeCard);
+
         //Проверяем, принадлежит ли эта карточка мне
-        if (this._owner._id === this.myData._id){
+        if (this._owner._id === this._myData._id){
             this._card.querySelector('.element__delete').classList.add('element__delete_active');
             //Клик по иконке удаления
             this._card.querySelector('.element__delete').addEventListener('click', () => {
-                this._handleDeleteClick();
+                this._handleDeleteClick(this._cardId);
             });
         }
 
