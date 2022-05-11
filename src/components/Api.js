@@ -11,7 +11,6 @@ export default class Api{
     }
 
     postCard(link, cardInfo){
-        console.log(link, cardInfo)
         return this._sendRequest(fetch(link, {
             method: 'POST',
             headers: this._headers,

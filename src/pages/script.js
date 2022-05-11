@@ -10,18 +10,25 @@ import { buttonEdit, buttonAdd,
   formProfile, formMesto, nameInput, jobInput,
   validationConfig, myToken, groupId, personName, description, avatar} from "../utils/constants.js"
 import Api from '../components/Api.js';
+import PopupDelete from '../components/PopupDelete.js';
 
 //Создаем объект класса PopupWithImage
 const popupWithImage = new PopupWithImage('.popup_type_photo');
 
+//Объект класса PopupDelete
+const popupDeleteCard = new PopupDelete('.popup_type_delete', api, );
+
 //Функция создания карточки
-function createCard (mestoName, mestoLink, cardSelector, mestoLikes){
+function createCard (mestoName, mestoLink, cardSelector, mestoOwner, myData, mestoLikes){
     const card = new Card({ name:mestoName,
       link:mestoLink,
       handleCardClick: () => {
         popupWithImage.open(mestoLink, mestoName)
       },
-    },  cardSelector, mestoLikes);
+      handleDeleteClick: () => {
+        popupDeleteCard.open();
+      }
+    },  cardSelector, mestoOwner, myData, mestoLikes);
     const cardElement = card.makeCard();
     return cardElement;
 }
@@ -35,7 +42,6 @@ formProfileValidation.enableValidation();
 const formMestoValidation = new FormValidator(validationConfig, formMesto);
 formMestoValidation.enableValidation();
 
-
 //РАБОТА С API
 
 //Объект класса Api
@@ -44,20 +50,22 @@ const api = new Api({
   'Content-Type': 'application/json'
 })
 
-//Получаем информацию по API и заполняем в .then
+//Получаем информацию о юзере (мне) по API и заполняем в .then
 api.getInfo(`https://nomoreparties.co/v1/${groupId}/users/me`) //О пользователе
   .then(res => {
     personName.textContent = res.name;
     description.textContent = res.about;
     avatar.src = res.avatar;
+    const myData = res;
+    return myData;
   })
-  .then((res) => { //О первых карточках + все остальные функции
+  .then((myData) => { //О первых карточках + все остальные функции
     api.getInfo(`https://nomoreparties.co/v1/${groupId}/cards`)
     .then(res => {
       //Генерация карточек из массива
       const cardsList = new Section({ items: res, 
         renderer: (item) => {
-          const card = createCard(item.name, item.link, '.card-template',  item.likes,);
+          const card = createCard(item.name, item.link, '.card-template',  item.owner, myData, item.likes);
           cardsList.addItem(card);
         },
       }, '.elements' );
@@ -66,7 +74,8 @@ api.getInfo(`https://nomoreparties.co/v1/${groupId}/users/me`) //О пользо
 
       //Создаем объект класса PopupWithForm для попапа добавления карточки
       const popupAddingCard = new PopupWithForm({ handleSubmit: (inputsValues) => {
-        const card = createCard(inputsValues.mestoName, inputsValues.mestoLink, '.card-template');
+        console.log(myData)
+        const card = createCard(inputsValues.mestoName, inputsValues.mestoLink, '.card-template', myData, myData);
         cardsList.addItem(card);
       }
       }, '.popup_type_mesto', api, `https://mesto.nomoreparties.co/v1/${groupId}/cards`, 'postCard');
@@ -103,6 +112,7 @@ api.getInfo(`https://nomoreparties.co/v1/${groupId}/users/me`) //О пользо
       //Слушатели закрытия попапов
       popupWithImage.setEventListeners();
       popupDescription.setEventListeners();
+      popupDeleteCard.setEventListeners();
 
       //Навешиваем слушатель на объект создания карточки
       popupAddingCard.setEventListeners();

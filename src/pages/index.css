@@ -43,3 +43,4 @@
 @import url('../blocks/popup/__overlay/popup__overlay.css');
 @import url('../blocks/element/__likes/element__likes.css');
 @import url('../blocks/element/__like-quantity/element__like-quantity.css');
+@import url('../blocks/element/__delete/_active/element__delete_active.css');

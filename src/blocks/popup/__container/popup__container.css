@@ -2,9 +2,9 @@
     background-color: #fff;
     border-radius: 10px;
     width: 430px;
-    min-height: 330px;
     position: relative;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -12,6 +12,5 @@
 @media screen and (max-width: 900px) {
     .popup__container{
         width: 282px;
-        min-height: 322px;
     }
 }

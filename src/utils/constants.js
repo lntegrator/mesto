@@ -9,6 +9,9 @@ export const popupProfile = document.querySelector('.popup_type_profile');
 export const popupMesto = document.querySelector('.popup_type_mesto');
 export const buttonCreateCard = popupMesto.querySelector('.form__submit-button');
 
+//Попап удаления
+export const popupDeleteCard = document.querySelector('.popup_type_delete')
+
 //Имя и описание пользователя
 export const personName = document.querySelector('.profile__title');
 export const description = document.querySelector('.profile__subtitle');
