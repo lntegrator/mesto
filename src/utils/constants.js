@@ -1,6 +1,7 @@
 //Переменные кнопок
 export const buttonEdit = document.querySelector('.profile__edit-button');
 export const buttonAdd = document.querySelector('.profile__add-button');
+export const buttonChangeAvatar = document.querySelector('.profile__edit-avatar')
 
 //Попап профиля
 export const popupProfile = document.querySelector('.popup_type_profile');
@@ -11,6 +12,10 @@ export const buttonCreateCard = popupMesto.querySelector('.form__submit-button')
 
 //Попап удаления
 export const popupDeleteCard = document.querySelector('.popup_type_delete')
+
+//Попап смены аватара
+export const popupAvatar = document.querySelector('.popup_type_avatar')
+export const buttonSubmitAvatar = popupAvatar.querySelector('.form__submit-button');
 
 //Имя и описание пользователя
 export const personName = document.querySelector('.profile__title');
@@ -24,6 +29,7 @@ export const inputLink = popupMesto.querySelector('.form__field_type_link');
 export const formProfile = popupProfile.querySelector('.form');
 export const nameInput = formProfile.querySelector('.form__field_type_name');
 export const jobInput = formProfile.querySelector('.form__field_type_job');
+export const formAvatar = popupAvatar.querySelector('.form');
 
 //Объект с селекторами для передачи его в класс валидации
 export const validationConfig = {

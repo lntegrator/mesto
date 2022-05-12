@@ -8,22 +8,9 @@ import Section from "../components/Section.js";
 import UserInfo from "../components/UserInfo.js";
 import { buttonEdit, buttonAdd,
   formProfile, formMesto, nameInput, jobInput,
-  validationConfig, myToken, groupId, personName, description, avatar} from "../utils/constants.js"
+  validationConfig, myToken, groupId, personName, description, avatar, buttonChangeAvatar, formAvatar, buttonSubmitAvatar, buttonCreateCard} from "../utils/constants.js"
 import Api from '../components/Api.js';
 import PopupDelete from '../components/PopupDelete.js';
-
-//Создаем объект класса PopupWithImage
-const popupWithImage = new PopupWithImage('.popup_type_photo');
-
-
-//Подключаем валидацию форм
-//Валидация формы профиля
-const formProfileValidation = new FormValidator(validationConfig, formProfile);
-formProfileValidation.enableValidation();
-
-//Валидация формы добавления карточки
-const formMestoValidation = new FormValidator(validationConfig, formMesto);
-formMestoValidation.enableValidation();
 
 //РАБОТА С API
 
@@ -42,6 +29,9 @@ api.getInfo(`https://nomoreparties.co/v1/${groupId}/users/me`) //О пользо
     const myData = res;
     return myData;
   })
+  .catch((err) => {
+    console.log(err);
+  })
   .then((myData) => { //О первых карточках + все остальные функции
     api.getInfo(`https://nomoreparties.co/v1/${groupId}/cards`)
     .then(res => {
@@ -51,36 +41,25 @@ api.getInfo(`https://nomoreparties.co/v1/${groupId}/users/me`) //О пользо
           const card = createCard(item.name, item.link, '.card-template',  item.owner, myData, item.likes, item._id);
           cardsList.addItem(card);
         },
-      }, '.elements' );
+      }, '.elements' )
 
       cardsList.renderItems();
 
+      //Создаем объект класса PopupWithImage
+      const popupWithImage = new PopupWithImage('.popup_type_photo'); 
+
       //Создаем объект класса PopupWithForm для попапа добавления карточки
-      const popupAddingCard = new PopupWithForm({ handleSubmit: (inputsValues) => {
-        const card = createCard(inputsValues.mestoName, inputsValues.mestoLink, '.card-template', myData, myData);
-        cardsList.addItem(card);
+      const popupAddingCard = new PopupWithForm({ 
+        handleSubmit: (inputsValues) => {
+          buttonCreateCard.textContent = 'Сохранение...'
+          const card = createCard(inputsValues.mestoName, inputsValues.mestoLink, '.card-template', myData, myData);
+          cardsList.addItem(card);
       }
       }, '.popup_type_mesto', api, `https://mesto.nomoreparties.co/v1/${groupId}/cards`, 'postCard');
 
-      //Слушатель кнопки добавления карточки
-      buttonAdd.addEventListener('click', () => {
-        formProfileValidation.toggleButtonState()
-        popupAddingCard.open();
-      });
-
-      //Слушатель кнопки редактирования профиля
-      buttonEdit.addEventListener('click', () => {
-        const userInformation = userInfo.getUserInfo();
-        const userName = userInformation.name;
-        const userDescription = userInformation.description;
-        nameInput.value = userName;
-        jobInput.value = userDescription;
-        popupDescription.open();
-      })
-
       //Объект класса UserInfo
       const userInfo = new UserInfo({nameSelector:'.profile__title',
-      descriptionSelector:'.profile__subtitle'})
+      descriptionSelector:'.profile__subtitle', avatarSelector: '.profile__avatar'})
 
       //Создаем объект класса PopupWithForm для попапа редактирования профиля
       const popupDescription = new PopupWithForm({
@@ -90,6 +69,16 @@ api.getInfo(`https://nomoreparties.co/v1/${groupId}/users/me`) //О пользо
           description: inputsValues.personDescription
         })
       }}, '.popup_type_profile', api, `https://nomoreparties.co/v1/${groupId}/users/me`, 'patchInfo');
+
+      //Объект класса PopupWithForm для попапа смены аватара
+      const popupAvatar = new PopupWithForm({
+        handleSubmit:(inputsValues) => {
+          buttonSubmitAvatar.textContent = 'Сохранение...'
+          userInfo.setAvatar({
+            avatarLink: inputsValues.avatarLink
+          })
+        }
+      }, '.popup_type_avatar', api, `https://mesto.nomoreparties.co/v1/${groupId}/users/me/avatar`, 'patchAvatar')
 
       //Объект класса PopupDelete
       const popupDeleteCard = new PopupDelete(
@@ -110,7 +99,22 @@ api.getInfo(`https://nomoreparties.co/v1/${groupId}/users/me`) //О пользо
           },
           handleDeleteClick: (id) => {
             popupDeleteCard.cardId(id); //Получаем ID карточки
-            popupDeleteCard.open();
+            popupDeleteCard.open(); //Открываем попап удаления при нажатии
+          },
+          handleLikeClick: (id, likesObject) => {
+            console.log(likesObject)
+            if (likesObject.some((likes) => likes._id === myData._id)){
+              api.unlikeCard(groupId, id)
+              .then(res => {
+                card.unlikeCard(res)
+              })
+            }
+            else{
+              api.likeCard(groupId, id)
+              .then(res => {
+                card.likeCard(res)
+              })
+            }
           }
         },  cardSelector, mestoOwner, myData, mestoLikes, cardId);
         const cardElement = card.makeCard();
@@ -121,10 +125,55 @@ api.getInfo(`https://nomoreparties.co/v1/${groupId}/users/me`) //О пользо
       popupWithImage.setEventListeners();
       popupDescription.setEventListeners();
       popupDeleteCard.setEventListeners();
+      popupAvatar.setEventListeners();
 
       //Навешиваем слушатель на объект создания карточки
       popupAddingCard.setEventListeners();
 
+      //Слушатель кнопки добавления карточки
+      buttonAdd.addEventListener('click', () => {
+        formProfileValidation.toggleButtonState()
+        popupAddingCard.open();
+      });
+
+      //Слушатель кнопки редактирования профиля
+      buttonEdit.addEventListener('click', () => {
+        const userInformation = userInfo.getUserInfo();
+        const userName = userInformation.name;
+        const userDescription = userInformation.description;
+        nameInput.value = userName;
+        jobInput.value = userDescription;
+        popupDescription.open();
+      })
+      
+      //Слушатель клика на кнопку смены аватара
+      buttonChangeAvatar.addEventListener('click', () => {
+        popupAvatar.open();
+      } )
+
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      buttonCreateCard.textContent = 'Сохранить'
+      buttonSubmitAvatar.textContent = 'Сохранить'
     })
 
   })
+  .catch((err) => {
+    console.log(err);
+  });
+
+//Подключаем валидацию форм
+//Валидация формы профиля
+const formProfileValidation = new FormValidator(validationConfig, formProfile);
+formProfileValidation.enableValidation();
+
+//Валидация формы добавления карточки
+const formMestoValidation = new FormValidator(validationConfig, formMesto);
+formMestoValidation.enableValidation();
+
+//Валидация формы изменения аватара
+const formAvatarValidation = new FormValidator(validationConfig, formAvatar);
+formAvatarValidation.enableValidation();

@@ -32,8 +32,32 @@ export default class Api{
         }))
     }
 
+    patchAvatar(link, avatarInfo){
+        return this._sendRequest(fetch(link, {
+            method: 'PATCH',
+            headers: this._headers,
+            body: JSON.stringify({
+                avatar: avatarInfo.avatarLink
+            })
+        }))
+    }
+
     deleteCard(link, id){
         return this._sendRequest(fetch(`${link}${id}`, {
+            method: 'DELETE',
+            headers: this._headers
+        }))
+    }
+
+    likeCard(groupId, id){
+        return this._sendRequest(fetch(`https://mesto.nomoreparties.co/v1/${groupId}/cards/${id}/likes `, {
+            method: 'PUT',
+            headers: this._headers
+        }))
+    }
+
+    unlikeCard(groupId, id){
+        return this._sendRequest(fetch(`https://mesto.nomoreparties.co/v1/${groupId}/cards/${id}/likes `, {
             method: 'DELETE',
             headers: this._headers
         }))
@@ -46,12 +70,11 @@ export default class Api{
                     return res.json()
                 }
                 else{
-                    console.log('Ошибка при получении ответа')
+                    return Promise.reject(`Ошибка: ${res.status}`);
                 }
             })
             .then((res) => {
                 return res
             })
     }
-
 }

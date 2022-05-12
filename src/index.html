@@ -16,7 +16,10 @@
         
         <section class="profile">
             <div class="profile__person">
-                <img src="<%=require('./images/avatar.jpg')%>" alt="Фотография автора" class="profile__avatar">
+                <div class="profile__image">
+                    <img src="<%=require('./images/avatar.jpg')%>" alt="Фотография автора" class="profile__avatar">
+                    <button class="profile__edit-avatar"></button>
+                </div>
                 <div class="profile__info">
                     <div class="profile__name">
                         <h1 class="profile__title">Жак-Ив Кусто</h1>
@@ -79,12 +82,27 @@
         </div>
     </div>
 
-    <div class="popup popup_type_delete   ">
+    <div class="popup popup_type_delete">
         <div class="popup__container">
             <button class="popup__button-close"></button>
             <form class="popup__form form" novalidate>
                 <h2 class="form__title">Вы уверены?</h2>
                 <button class="form__submit-button" type="submit">Да</button>
+            </form>
+            <div class="popup__overlay popup__overlay_delete"></div>
+        </div>
+    </div>
+
+    <div class="popup popup_type_avatar">
+        <div class="popup__container">
+            <button class="popup__button-close"></button>
+            <form class="popup__form form" novalidate>
+                <h2 class="form__title">Обновить аватар</h2>
+                <fieldset class="form__fieldset">
+                    <input name="avatarLink" type="url" id="avatar-input" class="form__field form__field_type_link" placeholder="Вставьте ссылку" value="" required>
+                    <span class="form__input-error avatar-input-error"></span>
+                </fieldset>
+                <button class="form__submit-button" type="submit">Сохранить</button>
             </form>
             <div class="popup__overlay popup__overlay_delete"></div>
         </div>
