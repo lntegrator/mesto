@@ -83,4 +83,13 @@ export class FormValidator{
     });
     this._setEventListener();
   }
+
+    //Метод очистки ошибок 
+    resetValidation(){
+      this.toggleButtonState();
+      this.inputList.forEach((inputElement) => {
+        this._hideInputError(inputElement);
+      })
+    }
+  
 }

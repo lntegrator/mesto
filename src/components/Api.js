@@ -1,28 +1,38 @@
 export default class Api{
-    constructor(headers){
+    constructor(headers, cohortId){
         this._headers = headers;
+        this._cohortId = cohortId;
     }
 
-    getInfo(link){
-        return this._sendRequest(fetch(link, {
+    getInfo(){
+        return this._sendRequest(fetch(`https://nomoreparties.co/v1/${this._cohortId}/users/me`, 
+        {
             method: 'GET',
             headers: this._headers
-        }));
+        }))
     }
 
-    postCard(link, cardInfo){
-        return this._sendRequest(fetch(link, {
+    getCards(){
+        return this._sendRequest(
+            fetch(`https://mesto.nomoreparties.co/v1/${this._cohortId}/cards`,{
+            method: 'GET',
+            headers: this._headers
+        }))
+    }
+
+    postCard(cardInfo){
+        return this._sendRequest(fetch(`https://mesto.nomoreparties.co/v1/${this._cohortId}/cards `, {
             method: 'POST',
             headers: this._headers,
             body: JSON.stringify({
-                name: cardInfo.mestoName,
-                link: cardInfo.mestoLink
+                name: cardInfo.name,
+                link: cardInfo.link
             })
         }))
     }
 
-    patchInfo(link, info){
-        return this._sendRequest(fetch(link, {
+    patchInfo(info){
+        return this._sendRequest(fetch(`https://mesto.nomoreparties.co/v1/${this._cohortId}/users/me`, {
             method: 'PATCH',
             headers: this._headers,
             body: JSON.stringify({
@@ -32,8 +42,8 @@ export default class Api{
         }))
     }
 
-    patchAvatar(link, avatarInfo){
-        return this._sendRequest(fetch(link, {
+    patchAvatar(avatarInfo){
+        return this._sendRequest(fetch(`https://mesto.nomoreparties.co/v1/${this._cohortId}/users/me/avatar `, {
             method: 'PATCH',
             headers: this._headers,
             body: JSON.stringify({
@@ -42,8 +52,8 @@ export default class Api{
         }))
     }
 
-    deleteCard(link, id){
-        return this._sendRequest(fetch(`${link}${id}`, {
+    deleteCard(id){
+        return this._sendRequest(fetch(`https://mesto.nomoreparties.co/v1/${this._cohortId}/cards/${id}`, {
             method: 'DELETE',
             headers: this._headers
         }))
@@ -69,12 +79,11 @@ export default class Api{
                 if (res.ok){
                     return res.json()
                 }
-                else{
-                    return Promise.reject(`Ошибка: ${res.status}`);
-                }
+                Promise.reject(`Ошибка ${res.status}`);
             })
             .then((res) => {
                 return res
             })
     }
+
 }

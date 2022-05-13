@@ -8,162 +8,201 @@ import Section from "../components/Section.js";
 import UserInfo from "../components/UserInfo.js";
 import { buttonEdit, buttonAdd,
   formProfile, formMesto, nameInput, jobInput,
-  validationConfig, myToken, groupId, personName, description, avatar, buttonChangeAvatar, formAvatar, buttonSubmitAvatar, buttonCreateCard} from "../utils/constants.js"
+  validationConfig, myToken, groupId, personName,
+  description, avatar, buttonChangeAvatar, formAvatar,
+  buttonSubmitAvatar, buttonCreateCard, buttonSubmitProfile} from "../utils/constants.js"
 import Api from '../components/Api.js';
 import PopupDelete from '../components/PopupDelete.js';
 
-//РАБОТА С API
+//Создаем объект класса PopupWithImage
+  const popupWithImage = new PopupWithImage('.popup_type_photo'); 
+
+//Объект класса UserInfo
+  const userInfo = new UserInfo({nameSelector:'.profile__title',
+  descriptionSelector:'.profile__subtitle', avatarSelector: '.profile__avatar'});
 
 //Объект класса Api
 const api = new Api({
   authorization: myToken,
   'Content-Type': 'application/json'
-})
+}, 'cohort-40')
 
-//Получаем информацию о юзере (мне) по API и заполняем в .then
-api.getInfo(`https://nomoreparties.co/v1/${groupId}/users/me`) //О пользователе
-  .then(res => {
-    personName.textContent = res.name;
-    description.textContent = res.about;
-    avatar.src = res.avatar;
-    const myData = res;
-    return myData;
-  })
-  .catch((err) => {
-    console.log(err);
-  })
-  .then((myData) => { //О первых карточках + все остальные функции
-    api.getInfo(`https://nomoreparties.co/v1/${groupId}/cards`)
-    .then(res => {
-      //Генерация карточек из массива
-      const cardsList = new Section({ items: res, 
-        renderer: (item) => {
-          const card = createCard(item.name, item.link, '.card-template',  item.owner, myData, item.likes, item._id);
-          cardsList.addItem(card);
-        },
-      }, '.elements' )
-
-      cardsList.renderItems();
-
-      //Создаем объект класса PopupWithImage
-      const popupWithImage = new PopupWithImage('.popup_type_photo'); 
-
-      //Создаем объект класса PopupWithForm для попапа добавления карточки
-      const popupAddingCard = new PopupWithForm({ 
-        handleSubmit: (inputsValues) => {
-          buttonCreateCard.textContent = 'Сохранение...'
-          const card = createCard(inputsValues.mestoName, inputsValues.mestoLink, '.card-template', myData, myData);
-          cardsList.addItem(card);
-      }
-      }, '.popup_type_mesto', api, `https://mesto.nomoreparties.co/v1/${groupId}/cards`, 'postCard');
-
-      //Объект класса UserInfo
-      const userInfo = new UserInfo({nameSelector:'.profile__title',
-      descriptionSelector:'.profile__subtitle', avatarSelector: '.profile__avatar'})
-
-      //Создаем объект класса PopupWithForm для попапа редактирования профиля
-      const popupDescription = new PopupWithForm({
-      handleSubmit:(inputsValues) => {
+//Создаем объект класса PopupWithForm для попапа редактирования профиля
+const popupDescription = new PopupWithForm({
+  handleSubmit:(inputsValues) => {
+    buttonSubmitProfile.textContent = 'Сохранение...';
+    function changeDescription(inputsValues){
+      api.patchInfo(inputsValues)
+      .then((res) => {
         userInfo.setUserInfo({
           name: inputsValues.personName,
           description: inputsValues.personDescription
         })
-      }}, '.popup_type_profile', api, `https://nomoreparties.co/v1/${groupId}/users/me`, 'patchInfo');
-
-      //Объект класса PopupWithForm для попапа смены аватара
-      const popupAvatar = new PopupWithForm({
-        handleSubmit:(inputsValues) => {
-          buttonSubmitAvatar.textContent = 'Сохранение...'
-          userInfo.setAvatar({
-            avatarLink: inputsValues.avatarLink
-          })
-        }
-      }, '.popup_type_avatar', api, `https://mesto.nomoreparties.co/v1/${groupId}/users/me/avatar`, 'patchAvatar')
-
-      //Объект класса PopupDelete
-      const popupDeleteCard = new PopupDelete(
-        '.popup_type_delete',
-        api,
-        'deleteCard',
-        `https://mesto.nomoreparties.co/v1/${groupId}/cards/`,
-        {handleDelete: (id) => console.log(id)},
-        );
-
-      //Функция создания карточки
-      function createCard (mestoName, mestoLink, cardSelector, mestoOwner, myData, mestoLikes, cardId){
-        const card = new Card({ 
-          name:mestoName,
-          link:mestoLink,
-          handleCardClick: () => {
-            popupWithImage.open(mestoLink, mestoName)
-          },
-          handleDeleteClick: (id) => {
-            popupDeleteCard.cardId(id); //Получаем ID карточки
-            popupDeleteCard.open(); //Открываем попап удаления при нажатии
-          },
-          handleLikeClick: (id, likesObject) => {
-            console.log(likesObject)
-            if (likesObject.some((likes) => likes._id === myData._id)){
-              api.unlikeCard(groupId, id)
-              .then(res => {
-                card.unlikeCard(res)
-              })
-            }
-            else{
-              api.likeCard(groupId, id)
-              .then(res => {
-                card.likeCard(res)
-              })
-            }
-          }
-        },  cardSelector, mestoOwner, myData, mestoLikes, cardId);
-        const cardElement = card.makeCard();
-        return cardElement;
-      }
-
-      //Слушатели закрытия попапов
-      popupWithImage.setEventListeners();
-      popupDescription.setEventListeners();
-      popupDeleteCard.setEventListeners();
-      popupAvatar.setEventListeners();
-
-      //Навешиваем слушатель на объект создания карточки
-      popupAddingCard.setEventListeners();
-
-      //Слушатель кнопки добавления карточки
-      buttonAdd.addEventListener('click', () => {
-        formProfileValidation.toggleButtonState()
-        popupAddingCard.open();
-      });
-
-      //Слушатель кнопки редактирования профиля
-      buttonEdit.addEventListener('click', () => {
-        const userInformation = userInfo.getUserInfo();
-        const userName = userInformation.name;
-        const userDescription = userInformation.description;
-        nameInput.value = userName;
-        jobInput.value = userDescription;
-        popupDescription.open();
+        popupDescription.close();
       })
-      
-      //Слушатель клика на кнопку смены аватара
-      buttonChangeAvatar.addEventListener('click', () => {
-        popupAvatar.open();
-      } )
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        buttonSubmitProfile.textContent = 'Сохранить';
+      })
+     }
+     changeDescription(inputsValues)
+  }}, '.popup_type_profile');
 
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-    .finally(() => {
-      buttonCreateCard.textContent = 'Сохранить'
-      buttonSubmitAvatar.textContent = 'Сохранить'
-    })
 
+//Объект класса PopupWithForm для попапа смены аватара
+const popupAvatar = new PopupWithForm({
+  handleSubmit:(inputsValues) => {
+    buttonSubmitAvatar.textContent = 'Сохранение...';
+    function changeAvatar(){
+      api.patchAvatar(inputsValues)
+      .then((res) => {
+        userInfo.setAvatar(res)
+        popupAvatar.close();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        buttonSubmitAvatar.textContent = 'Сохранить';
+      })
+    }
+    changeAvatar(inputsValues)
+  }
+}, '.popup_type_avatar')
+
+//Объект класса PopupDelete
+const popupDeleteCard = new PopupDelete(
+  {handleSubmit: (cardID, cardElement) => {
+    function deleteCard(cardId){
+      api.deleteCard(cardId)
+      .then(() => {
+        popupDeleteCard.close();
+        cardElement.remove();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    }
+    deleteCard(cardID);
+  }},
+  '.popup_type_delete',
+  );
+
+//Слушатель кнопки редактирования профиля
+  buttonEdit.addEventListener('click', () => {
+    formProfileValidation.resetValidation();
+    const userInformation = userInfo.getUserInfo();
+    const userName = userInformation.name;
+    const userDescription = userInformation.description;
+    nameInput.value = userName;
+    jobInput.value = userDescription;
+    popupDescription.open();
+  });
+
+//Слушатель клика на кнопку смены аватара
+buttonChangeAvatar.addEventListener('click', () => {
+  formAvatarValidation.resetValidation();
+  popupAvatar.open();
+} )
+
+//Слушатели закрытия попапов
+popupWithImage.setEventListeners();
+popupDescription.setEventListeners();
+popupDeleteCard.setEventListeners();
+popupAvatar.setEventListeners();
+
+//Функция создания карточки
+function createCard (mestoName, mestoLink, cardSelector, mestoOwner, myData, mestoLikes, cardId){
+  const card = new Card({ 
+    name:mestoName,
+    link:mestoLink,
+    handleCardClick: () => {
+      popupWithImage.open(mestoLink, mestoName)
+    },
+    handleDeleteClick: (id) => {
+      popupDeleteCard.cardId(id, cardElement); //Получаем ID карточки
+      popupDeleteCard.open(); //Открываем попап удаления при нажатии
+    },
+    handleLikeClick: (id, likesObject) => {
+      if (likesObject.some((likes) => likes._id === myData._id)){
+        api.unlikeCard(groupId, id)
+        .then(res => {
+          card.unlikeCard(res)
+        })
+      }
+      else{
+        api.likeCard(groupId, id)
+        .then(res => {
+          card.likeCard(res)
+        })
+      }
+    }
+  },  cardSelector, mestoOwner, myData, mestoLikes, cardId);
+  const cardElement = card.makeCard();
+  return cardElement;
+}
+
+//Создаем промис для ожидания подгрузки инфы о юзере и карточках
+Promise.all([api.getInfo(), api.getCards()])
+  .then(([userData, data]) => {
+    //Устанавливаем данные профиля из полученного ответа
+    userInfo.setUserInfo({
+      name: userData.name,
+      description: userData.about,
+      avatar: userData.avatar
+    });
+    userInfo.setAvatar(userData);
+
+    //Генерация карточек из массива
+    const cardsList = new Section({ items: data, 
+      renderer: (item) => {
+        const card = createCard(item.name, item.link, '.card-template',  item.owner, userData, item.likes, item._id);
+        cardsList.addItem(card);
+      },
+    }, '.elements' )
+
+    //Рендер карточек
+    cardsList.renderItems();
+
+    //Создаем объект класса PopupWithForm для попапа добавления карточки
+      const popupAddingCard = new PopupWithForm({ 
+        handleSubmit: (inputsValues) => {
+          buttonCreateCard.textContent = 'Сохранение...';
+          function addCard(cardInfo) {
+            api.postCard({
+              name: cardInfo.mestoName,
+              link: cardInfo.mestoLink   
+             })
+            .then((res) => {
+              const card = createCard(res.name, res.link, '.card-template', userData, userData);
+              cardsList.addItem(card);
+              popupAddingCard.close() //закрываем попап после добавления карточки
+            })
+            .catch((err) => {
+              console.log(err);
+            })
+            .finally(() => {
+              buttonCreateCard.textContent = 'Создать'; //Возвращаем текст кнопки
+            })
+          }
+          addCard(inputsValues) //Активируем функцию запроса и создания карточки
+       }
+       }, '.popup_type_mesto');
+
+    //Слушатель кнопки добавления карточки
+    buttonAdd.addEventListener('click', () => {
+      formMestoValidation.resetValidation();
+      popupAddingCard.open();
+    });
+
+    //Слушатель для закрытия попапа
+    popupAddingCard.setEventListeners();
   })
   .catch((err) => {
     console.log(err);
-  });
+  })
 
 //Подключаем валидацию форм
 //Валидация формы профиля

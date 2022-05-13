@@ -5,6 +5,7 @@ export const buttonChangeAvatar = document.querySelector('.profile__edit-avatar'
 
 //Попап профиля
 export const popupProfile = document.querySelector('.popup_type_profile');
+export const buttonSubmitProfile = popupProfile.querySelector('.form__submit-button');
 
 //Попап места
 export const popupMesto = document.querySelector('.popup_type_mesto');

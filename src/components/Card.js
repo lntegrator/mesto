@@ -61,7 +61,6 @@ export class Card {
     _setEventListeners(){
 
         //По кнопке лайка
-        //this._card.querySelector('.element__button').addEventListener('click', this._likeCard);
         this._card.querySelector('.element__button').addEventListener('click', () => {
             this._handleLikeClick(this._cardId, this._likes)
         });
@@ -71,7 +70,7 @@ export class Card {
             this._card.querySelector('.element__delete').classList.add('element__delete_active');
             //Клик по иконке удаления
             this._card.querySelector('.element__delete').addEventListener('click', () => {
-                this._handleDeleteClick(this._cardId);
+                this._handleDeleteClick(this._cardId, this._card);
             });
         }
 
