@@ -123,6 +123,7 @@ function createCard (mestoName, mestoLink, cardSelector, mestoOwner, myData, mes
     },
     handleDeleteClick: (id) => {
       popupDeleteCard.cardId(id, cardElement); //Получаем ID карточки
+      console.log(id);
       popupDeleteCard.open(); //Открываем попап удаления при нажатии
     },
     handleLikeClick: (id, likesObject) => {
@@ -176,7 +177,7 @@ Promise.all([api.getInfo(), api.getCards()])
               link: cardInfo.mestoLink   
              })
             .then((res) => {
-              const card = createCard(res.name, res.link, '.card-template', userData, userData);
+              const card = createCard(res.name, res.link, '.card-template', userData, userData, res.likes, res._id);
               cardsList.addItem(card);
               popupAddingCard.close() //закрываем попап после добавления карточки
             })
